@@ -22,6 +22,53 @@ namespace ProjetoAutenticacaoBasica.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ProjetoAutenticacaoBasica.Api.models.Passageiro", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Passageiros");
+                });
+
+            modelBuilder.Entity("ProjetoAutenticacaoBasica.Api.models.Passagem", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("Assento")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Passageiroid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Vooid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("Passageiroid");
+
+                    b.HasIndex("Vooid");
+
+                    b.ToTable("Passagens");
+                });
+
             modelBuilder.Entity("ProjetoAutenticacaoBasica.Api.models.Usuario", b =>
                 {
                     b.Property<int>("id")
@@ -48,6 +95,49 @@ namespace ProjetoAutenticacaoBasica.Api.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("ProjetoAutenticacaoBasica.Api.models.Voo", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("Codigo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Destino")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Origem")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Voos");
+                });
+
+            modelBuilder.Entity("ProjetoAutenticacaoBasica.Api.models.Passagem", b =>
+                {
+                    b.HasOne("ProjetoAutenticacaoBasica.Api.models.Passageiro", "Passageiro")
+                        .WithMany()
+                        .HasForeignKey("Passageiroid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjetoAutenticacaoBasica.Api.models.Voo", "Voo")
+                        .WithMany()
+                        .HasForeignKey("Vooid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Passageiro");
+
+                    b.Navigation("Voo");
                 });
 #pragma warning restore 612, 618
         }
